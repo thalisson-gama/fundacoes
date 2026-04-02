@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construtora — Construção Financiada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES
+    ============================================================ */
+    :root {
+      --black:        #000000;
+      --black-soft:   #1a1a1a;
+      --brown:        #8B6B3D;
+      --brown-light:  #A0784A;
+      --brown-dark:   #6B4F2A;
+      --green:        #2ECC71;
+      --green-dark:   #27AE60;
+      --white:        #FFFFFF;
+      --gray-light:   #F5F5F5;
+      --gray-mid:     #CCCCCC;
+      --font-main:    'Montserrat', sans-serif;
+      --radius-btn:   4px;
+      --transition:   0.3s ease;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-main);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--black);
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      line-height: 1.7;
+      margin-top: 14px;
+      max-width: 640px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 16px 36px;
+      font-family: var(--font-main);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: var(--radius-btn);
+      border: none;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+    .btn:active { transform: translateY(0); }
+    .btn-green  { background: var(--green);  color: var(--white); }
+    .btn-green:hover { background: var(--green-dark); }
+    .btn-brown  { background: var(--brown);  color: var(--white); }
+    .btn-brown:hover { background: var(--brown-light); }
+    .btn-outline { background: transparent; color: var(--white); border: 2px solid var(--white); }
+    .btn-outline:hover { background: var(--white); color: var(--black); }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       1. HERO SECTION
+    ============================================================ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 20px;
+      background:
+        linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
+        /* TROCAR: URL da imagem de fundo real do projeto */
+        url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80') center/cover no-repeat;
+      color: var(--white);
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.55) 100%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 860px; }
+
+    .hero-logo {
+      width: 160px;
+      height: 60px;
+      margin: 0 auto 48px;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      letter-spacing: 4px;
+      font-size: 18px;
+      /* TROCAR: substituir por <img> com src do logo real */
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      margin-bottom: 20px;
+    }
+    .hero-headline {
+      font-size: clamp(28px, 5vw, 58px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero-headline em {
+      color: var(--green);
+      font-style: normal;
+    }
+    .hero-subheadline {
+      font-size: clamp(15px, 2vw, 20px);
+      font-weight: 400;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.85);
+      max-width: 660px;
+      margin: 0 auto 44px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.55;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ============================================================
+       2. COMO FUNCIONA
+    ============================================================ */
+    .how {
+      padding: 100px 20px;
+      background: var(--white);
+      text-align: center;
+    }
+    .how .section-title { color: var(--black); }
+    .how .section-subtitle { margin: 14px auto 0; color: #555; }
+    .how .partner-name { color: var(--brown); font-weight: 800; }
+    .how-video-wrap {
+      margin-top: 52px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: var(--black-soft);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+    }
+    .video-container iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    /* Placeholder de vídeo clicável — substituir pelo iframe real */
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+        /* TROCAR: thumbnail do vídeo real */
+        url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&q=80') center/cover;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .video-placeholder:hover { opacity: 0.9; }
+    .play-btn {
+      width: 80px;
+      height: 80px;
+      background: rgba(46,204,113,0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--transition), background var(--transition);
+    }
+    .video-placeholder:hover .play-btn { transform: scale(1.12); background: var(--green); }
+    .play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 5px; }
+    .video-placeholder span {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       3. BENEFÍCIOS (3 COLUNAS)
+    ============================================================ */
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .benefit-col {
+      padding: 72px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .benefit-col:nth-child(1) { background: var(--black); }
+    .benefit-col:nth-child(2) { background: var(--brown-dark); }
+    .benefit-col:nth-child(3) { background: var(--black-soft); }
+    .benefit-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .benefit-icon svg { width: 28px; height: 28px; }
+    .benefit-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown-light);
+    }
+    .benefit-text {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.3;
+    }
+    .benefit-desc { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+    /* ============================================================
+       4. EXEMPLOS REAIS
+    ============================================================ */
+    .examples {
+      padding: 100px 20px;
+      background: var(--brown-dark);
+      text-align: center;
+    }
+    .examples .section-title { color: var(--white); }
+    .examples .section-subtitle { color: rgba(255,255,255,0.75); margin: 12px auto 52px; }
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+    }
+    .example-card {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+    }
+    /* Card header */
+    .card-header {
+      background: var(--black);
+      position: relative;
+    }
+    .card-header img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+    .card-specs {
+      display: flex;
+      justify-content: space-around;
+      padding: 14px 8px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--white);
+    }
+    .spec-item svg { width: 20px; height: 20px; opacity: 0.8; }
+    .spec-item span { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+    .spec-item small { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+    /* Card body */
+    .card-body {
+      background: var(--white);
+      padding: 24px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-body .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+    }
+    .card-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+    .card-row { border-top: 1px solid #eee; padding-top: 12px; }
+    /* Card footer */
+    .card-footer {
+      background: var(--black);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-footer .footer-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .card-installment {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 40px;
+      padding: 6px 28px;
+      letter-spacing: 1px;
+    }
+    .examples-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+
+    /* ============================================================
+       5. OBRAS REALIZADAS — CARROSSEL
+    ============================================================ */
+    .gallery {
+      padding: 100px 20px;
+      background: var(--gray-light);
+      text-align: center;
+    }
+    .gallery .section-title { color: var(--black); }
+    .gallery .section-subtitle { color: #666; margin: 12px auto 52px; }
+    .carousel-wrapper {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 20px;
+    }
+    .carousel-slide {
+      flex: 0 0 calc((100% - 40px) / 3);
+      aspect-ratio: 4 / 3;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .carousel-slide:hover img { transform: scale(1.05); }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: var(--white);
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .carousel-btn:hover { background: var(--brown); }
+    .carousel-btn:hover svg { stroke: white; }
+    .carousel-btn svg { width: 20px; height: 20px; stroke: var(--black); stroke-width: 2.5; fill: none; }
+    .carousel-prev { left: -24px; }
+    .carousel-next { right: -24px; }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 28px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-mid);
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .dot.active { background: var(--brown); transform: scale(1.3); }
+
+    /* ============================================================
+       6. DEPOIMENTOS
+    ============================================================ */
+    .testimonials {
+      padding: 100px 20px;
+      background: var(--white);
+      text-align: center;
+    }
+    .testimonials .section-title { color: var(--black); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 960px;
+      margin: 52px auto 0;
+    }
+    .testimonial-card {
+      background: var(--gray-light);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.12); }
+    .testimonial-img-wrap { position: relative; }
+    .testimonial-img-wrap img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+    .testimonial-img-wrap .watermark {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(139,107,61,0.85);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 10px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .testimonial-body {
+      padding: 28px 28px 32px;
+      text-align: left;
+    }
+    .testimonial-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 14px;
+    }
+    .testimonial-quote {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #555;
+      font-style: italic;
+    }
+    .testimonial-quote::before { content: '"'; font-size: 48px; line-height: 0; vertical-align: -18px; color: var(--brown-light); margin-right: 4px; font-style: normal; }
+
+    /* ============================================================
+       7. GARANTIMOS SEGURANÇA
+    ============================================================ */
+    .security {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .security-text {
+      background: var(--brown-dark);
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+    .security-text .section-title { color: var(--white); }
+    .security-subtitle {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.5;
+    }
+    .security-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--brown-light);
+      border-radius: 2px;
+    }
+    .security-text p { font-size: 15px; color: rgba(255,255,255,0.72); line-height: 1.8; }
+    .security-image {
+      position: relative;
+      background: var(--black-soft);
+      overflow: hidden;
+    }
+    .security-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+    .security-badge {
+      position: absolute;
+      bottom: 36px;
+      left: 36px;
+      background: var(--brown);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .security-badge strong {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .security-badge span { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; }
+    .security-logo-overlay {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 80px;
+      height: 36px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: white;
+    }
+
+    /* ============================================================
+       8. FORMULÁRIO MULTI-STEP
+    ============================================================ */
+    .form-section {
+      padding: 100px 20px;
+      background: linear-gradient(135deg, var(--brown-dark) 0%, var(--black) 60%);
+      text-align: center;
+    }
+    .form-section .section-title { color: var(--white); }
+    .form-section .section-subtitle { color: rgba(255,255,255,0.7); margin: 12px auto 52px; }
+
+    /* Steps indicator */
+    .steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 44px;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .step-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      transition: all var(--transition);
+    }
+    .step-circle.active   { background: var(--green); border-color: var(--green); color: white; }
+    .step-circle.complete { background: var(--brown); border-color: var(--brown); color: white; }
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      transition: color var(--transition);
+    }
+    .step-item.active .step-label   { color: var(--green); }
+    .step-item.complete .step-label { color: var(--brown-light); }
+    .step-connector {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 26px;
+      position: relative;
+    }
+    .step-connector-fill {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      background: var(--brown);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* Form itself */
+    .form-card {
+      max-width: 580px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 44px 40px;
+      backdrop-filter: blur(8px);
+    }
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: fadeSlide 0.4s ease; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.9);
+      border: 2px solid transparent;
+      border-radius: 4px;
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      appearance: none;
+    }
+    .form-group input::placeholder { color: #aaa; font-weight: 400; }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,204,113,0.2); }
+    .form-group input.error { border-color: #e74c3c; box-shadow: 0 0 0 3px rgba(231,76,60,0.15); }
+    .error-msg {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin-top: 5px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .form-actions .btn { flex: 1; padding: 16px; font-size: 13px; }
+    .btn-back {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.2); }
+
+    /* Success message */
+    .form-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadeSlide 0.5s ease;
+    }
+    .form-success.show { display: flex; }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-icon svg { width: 36px; height: 36px; stroke: white; stroke-width: 2.5; fill: none; }
+    .form-success h3 { font-size: 22px; font-weight: 800; color: white; }
+    .form-success p { font-size: 15px; color: rgba(255,255,255,0.7); text-align: center; }
+
+    /* ============================================================
+       9. FOOTER
+    ============================================================ */
+    footer {
+      position: relative;
+      padding: 72px 20px 48px;
+      text-align: center;
+      background:
+        linear-gradient(rgba(0,0,0,0.82), rgba(0,0,0,0.82)),
+        /* TROCAR: imagem de fundo interna real */
+        url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=80') center/cover no-repeat;
+      color: rgba(255,255,255,0.6);
+    }
+    .footer-logo {
+      width: 140px;
+      height: 52px;
+      margin: 0 auto 28px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      letter-spacing: 4px;
+      font-size: 16px;
+      color: white;
+    }
+    .footer-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--brown);
+      margin: 0 auto 20px;
+    }
+    .footer-copy { font-size: 13px; margin-bottom: 10px; }
+    .footer-dev {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    .footer-dev a { color: var(--brown-light); font-weight: 600; }
+
+    /* ============================================================
+       RESPONSIVO
+    ============================================================ */
+    @media (max-width: 900px) {
+      .benefits { grid-template-columns: 1fr; }
+      .benefit-col { padding: 52px 28px; }
+      .examples-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .security { grid-template-columns: 1fr; }
+      .security-text { padding: 60px 28px; }
+      .security-image { min-height: 360px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 32px 24px; }
+    }
+    @media (max-width: 680px) {
+      .carousel-slide { flex: 0 0 calc(100%); }
+      .carousel-prev { left: 8px; }
+      .carousel-next { right: 8px; }
+      .step-connector { width: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       1. HERO
+  ============================================================ -->
+  <header class="hero">
+    <div class="hero-content">
+      <!-- TROCAR: substituir pela tag <img> com o logo real -->
+      <div class="hero-logo" aria-label="Logo da Construtora">LOGO</div>
+
+      <p class="hero-eyebrow">Construção com Financiamento — Uberlândia, MG</p>
+
+      <h1 class="hero-headline">
+        Veja como nossos clientes investiram<br>
+        <em>30% a menos</em> do que o mercado<br>
+        na mesma casa
+      </h1>
+
+      <!-- TROCAR: subtítulo conforme briefing do cliente -->
+      <p class="hero-subheadline">
+        Construímos com financiamento na planta, entregamos com custo transparente e você paga só depois que a obra começa. Sem surpresas, sem intermediários.
+      </p>
+
+      <div class="hero-buttons">
+        <!-- Botão primário: ancora para o formulário -->
+        <a href="#formulario" class="btn btn-green">Quero meu orçamento</a>
+        <!-- Botão secundário: ancora para o vídeo -->
+        <a href="#video" class="btn btn-brown">Ver como funciona</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      Rolar
+    </div>
+  </header>
+
+  <!-- ============================================================
+       2. COMO FUNCIONA
+  ============================================================ -->
+  <section class="how fade-in" id="video">
+    <div class="container">
+      <p class="section-label">Método transparente</p>
+      <!-- TROCAR: título da seção -->
+      <h2 class="section-title">Como Funciona?</h2>
+      <p class="section-subtitle">
+        <!-- TROCAR: nome do sócio/responsável e descrição do método -->
+        Veja o <strong class="partner-name">Eng. Ricardo Moura</strong> explicar em detalhes como funciona a construção financiada e por que nossos clientes pagam menos do que comprar um imóvel pronto.
+      </p>
+
+      <div class="how-video-wrap">
+        <div class="video-container">
+          <!-- TROCAR: substituir src pelo embed real do YouTube -->
+          <!-- <iframe src="https://www.youtube.com/embed/SEU_VIDEO_ID" allowfullscreen title="Como funciona a construção financiada"></iframe> -->
+
+          <!-- Placeholder clicável — remover quando tiver o embed real -->
+          <div class="video-placeholder" role="button" tabindex="0" aria-label="Assistir ao vídeo explicativo" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\' allowfullscreen allow=\'autoplay\'></iframe>'; this.style.position='absolute';">
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <span>Assistir ao vídeo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. BENEFÍCIOS
+  ============================================================ -->
+  <section class="benefits" aria-label="Benefícios">
+
+    <div class="benefit-col fade-in">
+      <div class="benefit-icon">
+        <!-- Ícone: Custo -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+      </div>
+      <!-- TROCAR: label e textos do benefício 1 -->
+      <span class="benefit-label">Custo real</span>
+      <p class="benefit-text">Você constrói pagando o preço de custo, sem a margem do incorporador</p>
+      <p class="benefit-desc">Acesso ao custo de obra direto, sem intermediários inflando o preço final.</p>
+    </div>
+
+    <div class="benefit-col fade-in" style="transition-delay:0.15s">
+      <div class="benefit-icon">
+        <!-- Ícone: Segurança -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <!-- TROCAR: label e textos do benefício 2 -->
+      <span class="benefit-label">Transparência total</span>
+      <p class="benefit-text">Planilha de custos aberta desde o primeiro dia de obra</p>
+      <p class="benefit-desc">Nada escondido. Você sabe exatamente onde cada real está sendo investido.</p>
+    </div>
+
+    <div class="benefit-col fade-in" style="transition-delay:0.3s">
+      <div class="benefit-icon">
+        <!-- Ícone: Financiamento -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" aria-hidden="true">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
+      </div>
+      <!-- TROCAR: label e textos do benefício 3 -->
+      <span class="benefit-label">Financiamento facilitado</span>
+      <p class="benefit-text">Use o FGTS e o crédito bancário para construir sem descapitalizar</p>
+      <p class="benefit-desc">Integramos com Caixa Econômica e bancos parceiros para facilitar seu crédito.</p>
+    </div>
+
+  </section>
+
+  <!-- ============================================================
+       4. EXEMPLOS REAIS
+  ============================================================ -->
+  <section class="examples fade-in">
+    <div class="container">
+      <p class="section-label">Simulações reais</p>
+      <!-- TROCAR: título e subtítulo -->
+      <h2 class="section-title">Exemplos Reais de Financiamento</h2>
+      <p class="section-subtitle">
+        Veja quanto custou construir com a gente versus comprar um imóvel semelhante no mercado.
+      </p>
+
+      <div class="examples-grid">
+
+        <!-- CARD 1 — TROCAR: dados reais do projeto -->
+        <article class="example-card fade-in">
+          <div class="card-header">
+            <!-- TROCAR: imagem real do projeto -->
+            <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80" alt="Casa térrea 3 quartos — Projeto 1" />
+            <div class="card-specs">
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span>140 m²</span><small>Área</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>3 Suítes</span><small>Suítes</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="12" rx="10" ry="5"/></svg>
+                <span>Piscina</span><small>Incluso</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div>
+              <p class="card-label">Construindo com financiamento:</p>
+              <p class="card-value">R$ 420.000</p>
+            </div>
+            <div class="card-row">
+              <p class="card-label">Valor do imóvel pronto:</p>
+              <p class="card-value">R$ 680.000</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="footer-label">Valor da parcela</span>
+            <span class="card-installment">R$ 2.890/mês</span>
+          </div>
+        </article>
+
+        <!-- CARD 2 — TROCAR: dados reais do projeto -->
+        <article class="example-card fade-in" style="transition-delay:0.15s">
+          <div class="card-header">
+            <!-- TROCAR: imagem real do projeto -->
+            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="Sobrado 4 quartos — Projeto 2" />
+            <div class="card-specs">
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span>200 m²</span><small>Área</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>4 Suítes</span><small>Suítes</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="12" rx="10" ry="5"/></svg>
+                <span>Piscina</span><small>Incluso</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div>
+              <p class="card-label">Construindo com financiamento:</p>
+              <p class="card-value">R$ 590.000</p>
+            </div>
+            <div class="card-row">
+              <p class="card-label">Valor do imóvel pronto:</p>
+              <p class="card-value">R$ 940.000</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="footer-label">Valor da parcela</span>
+            <span class="card-installment">R$ 4.150/mês</span>
+          </div>
+        </article>
+
+        <!-- CARD 3 — TROCAR: dados reais do projeto -->
+        <article class="example-card fade-in" style="transition-delay:0.3s">
+          <div class="card-header">
+            <!-- TROCAR: imagem real do projeto -->
+            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80" alt="Casa moderna 2 suítes — Projeto 3" />
+            <div class="card-specs">
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span>110 m²</span><small>Área</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span>2 Suítes</span><small>Suítes</small>
+              </div>
+              <div class="spec-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
+                <span>Varanda</span><small>Incluso</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div>
+              <p class="card-label">Construindo com financiamento:</p>
+              <p class="card-value">R$ 280.000</p>
+            </div>
+            <div class="card-row">
+              <p class="card-label">Valor do imóvel pronto:</p>
+              <p class="card-value">R$ 450.000</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="footer-label">Valor da parcela</span>
+            <span class="card-installment">R$ 1.920/mês</span>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- TROCAR: nota de rodapé conforme condições reais -->
+      <p class="examples-note">* Valores estimados com base em simulações da Caixa Econômica Federal. Condições reais dependem de análise de crédito, localização e projeto.</p>
+
+      <a href="#formulario" class="btn btn-green">Quero uma simulação para o meu projeto</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. OBRAS REALIZADAS — CARROSSEL
+  ============================================================ -->
+  <section class="gallery fade-in">
+    <div class="container">
+      <p class="section-label">Portfolio</p>
+      <!-- TROCAR: título e subtítulo -->
+      <h2 class="section-title">Obras Realizadas</h2>
+      <p class="section-subtitle">Conheça alguns dos projetos que entregamos nos últimos anos em Uberlândia e região.</p>
+
+      <div class="carousel-wrapper" aria-label="Galeria de obras realizadas">
+        <button class="carousel-btn carousel-prev" aria-label="Imagem anterior">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <div class="carousel-track" id="carouselTrack">
+          <!-- TROCAR: substituir por imagens reais das obras -->
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" alt="Obra 1 — Casa térrea em Uberlândia" /></div>
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80" alt="Obra 2 — Sobrado com piscina" /></div>
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Obra 3 — Casa moderna" /></div>
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80" alt="Obra 4 — Residência premium" /></div>
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="Obra 5 — Casa em condomínio" /></div>
+          <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Obra 6 — Residência ampla" /></div>
+        </div>
+
+        <button class="carousel-btn carousel-next" aria-label="Próxima imagem">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="carousel-dots" id="carouselDots" aria-label="Páginas da galeria"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. DEPOIMENTOS
+  ============================================================ -->
+  <section class="testimonials fade-in">
+    <div class="container">
+      <p class="section-label">Quem já construiu</p>
+      <!-- TROCAR: título -->
+      <h2 class="section-title">O que nossos clientes dizem</h2>
+
+      <div class="testimonials-grid">
+
+        <!-- DEPOIMENTO 1 — TROCAR: foto, nome e texto reais -->
+        <article class="testimonial-card">
+          <div class="testimonial-img-wrap">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80" alt="Foto do cliente Carlos Andrade" />
+            <span class="watermark">Cliente</span>
+          </div>
+          <div class="testimonial-body">
+            <h3 class="testimonial-name">Carlos Andrade</h3>
+            <p class="testimonial-quote">
+              Eu não acreditava que era possível construir do jeito que eles fazem. No final a minha casa ficou R$ 200 mil mais barata do que o apê pronto que eu ia comprar, e muito maior.
+            </p>
+          </div>
+        </article>
+
+        <!-- DEPOIMENTO 2 — TROCAR: foto, nome e texto reais -->
+        <article class="testimonial-card">
+          <div class="testimonial-img-wrap">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&q=80" alt="Foto da cliente Fernanda Lima" />
+            <span class="watermark">Cliente</span>
+          </div>
+          <div class="testimonial-body">
+            <h3 class="testimonial-name">Fernanda Lima</h3>
+            <p class="testimonial-quote">
+              O que mais me surpreendeu foi a transparência. Toda semana recebia o relatório da obra. Nunca tive dúvida de onde estava indo o meu dinheiro. Recomendo de olhos fechados.
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. GARANTIMOS SEGURANÇA
+  ============================================================ -->
+  <section class="security fade-in" aria-label="Garantias e segurança">
+
+    <div class="security-text">
+      <p class="section-label">Nossa garantia</p>
+      <!-- TROCAR: título, subtítulo e textos -->
+      <h2 class="section-title">Garantimos Segurança em cada etapa</h2>
+      <p class="security-subtitle">Mais de uma década construindo sonhos com responsabilidade e técnica.</p>
+      <div class="security-divider"></div>
+      <p>
+        Cada obra é acompanhada por engenheiros registrados no CREA, com ART emitida antes do início. Sua construção tem respaldo técnico, jurídico e financeiro do começo ao fim.
+      </p>
+      <p>
+        Trabalhamos com contratos claros, cronograma visível e relatórios semanais de progresso. Você acompanha a obra mesmo à distância, com fotos e vídeos enviados diretamente no WhatsApp.
+      </p>
+    </div>
+
+    <div class="security-image">
+      <!-- TROCAR: foto real do responsável da empresa -->
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=700&q=80" alt="Engenheiro responsável pela construtora" />
+      <!-- TROCAR: logo real da empresa -->
+      <div class="security-logo-overlay">LOGO</div>
+      <!-- TROCAR: dados reais de atuação -->
+      <div class="security-badge">
+        <strong>+10 anos</strong>
+        <span>de atuação</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================
+       8. FORMULÁRIO MULTI-STEP
+  ============================================================ -->
+  <section class="form-section fade-in" id="formulario">
+    <div class="container">
+      <p class="section-label">Dê o primeiro passo</p>
+      <!-- TROCAR: título e subtítulo -->
+      <h2 class="section-title">Vamos Conversar?</h2>
+      <p class="section-subtitle">
+        Preencha o formulário abaixo. Nossa equipe entrará em contato em até 24h para apresentar uma simulação personalizada.
+      </p>
+
+      <!-- Indicador de progresso -->
+      <div class="steps-indicator" aria-label="Progresso do formulário">
+        <div class="step-item active" id="stepItem1">
+          <div class="step-circle active" id="stepCircle1">1</div>
+          <span class="step-label">Seus dados</span>
+        </div>
+        <div class="step-connector"><div class="step-connector-fill" id="stepConnector"></div></div>
+        <div class="step-item" id="stepItem2">
+          <div class="step-circle" id="stepCircle2">2</div>
+          <span class="step-label">Seu projeto</span>
+        </div>
+      </div>
+
+      <!-- Formulário -->
+      <div class="form-card">
+
+        <!-- ETAPA 1 -->
+        <div class="form-step active" id="formStep1" role="group" aria-labelledby="step1heading">
+          <h3 id="step1heading" style="color:white;font-size:16px;font-weight:700;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase;">Seus dados de contato</h3>
+
+          <div class="form-group">
+            <label for="nome">Nome completo *</label>
+            <input type="text" id="nome" name="nome" placeholder="Ex: João Silva" autocomplete="name" required />
+            <span class="error-msg" id="nomeError">Por favor, insira seu nome completo.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="seuemail@email.com" autocomplete="email" required />
+            <span class="error-msg" id="emailError">Por favor, insira um e-mail válido.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="whatsapp">WhatsApp *</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="(34) 9 0000-0000" autocomplete="tel" required />
+            <span class="error-msg" id="whatsappError">Por favor, insira seu WhatsApp.</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-green" onclick="nextStep()">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ETAPA 2 -->
+        <div class="form-step" id="formStep2" role="group" aria-labelledby="step2heading">
+          <h3 id="step2heading" style="color:white;font-size:16px;font-weight:700;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase;">Sobre o seu projeto</h3>
+
+          <div class="form-group">
+            <label for="terreno">Você tem um terreno? *</label>
+            <select id="terreno" name="terreno" required>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option value="sim_quitado">Sim, terreno quitado</option>
+              <option value="sim_nao_quitado">Sim, mas ainda financiado</option>
+              <option value="nao">Não tenho terreno</option>
+            </select>
+            <span class="error-msg" id="terrenoError">Por favor, selecione uma opção.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="projeto">Você já tem um projeto? *</label>
+            <select id="projeto" name="projeto" required>
+              <option value="" disabled selected>Selecione uma opção</option>
+              <option value="sim">Sim, já tenho projeto</option>
+              <option value="nao">Não, ainda não tenho</option>
+            </select>
+            <span class="error-msg" id="projetoError">Por favor, selecione uma opção.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="cidade">Cidade *</label>
+            <input type="text" id="cidade" name="cidade" placeholder="Ex: Uberlândia" required />
+            <span class="error-msg" id="cidadeError">Por favor, insira sua cidade.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="renda">Renda familiar *</label>
+            <input type="text" id="renda" name="renda" placeholder="Ex: R$ 8.000/mês" required />
+            <span class="error-msg" id="rendaError">Por favor, insira sua renda familiar.</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-back" onclick="prevStep()">← Voltar</button>
+            <button type="button" class="btn btn-green" onclick="submitForm()">Enviar agora →</button>
+          </div>
+        </div>
+
+        <!-- SUCESSO -->
+        <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Recebemos sua solicitação!</h3>
+          <!-- TROCAR: texto de confirmação conforme processo real -->
+          <p>Nossa equipe entrará em contato pelo WhatsApp em até 24 horas com uma simulação personalizada para o seu projeto.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       9. FOOTER
+  ============================================================ -->
+  <footer>
+    <!-- TROCAR: logo real da empresa -->
+    <div class="footer-logo">LOGO</div>
+    <div class="footer-divider"></div>
+    <!-- TROCAR: nome real da empresa e ano -->
+    <p class="footer-copy">© 2025 Construtora. Todos os direitos reservados.</p>
+    <!-- TROCAR: créditos reais -->
+    <p class="footer-dev">Desenvolvido por <a href="#" target="_blank" rel="noopener">M² BLACK</a></p>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ============================================================
+       FADE-IN — Intersection Observer
+    ============================================================ */
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    /* ============================================================
+       FORMULÁRIO MULTI-STEP
+    ============================================================ */
+    let currentStep = 1;
+
+    function nextStep() {
+      if (!validateStep1()) return;
+      currentStep = 2;
+      document.getElementById('formStep1').classList.remove('active');
+      document.getElementById('formStep2').classList.add('active');
+      updateStepIndicator();
+    }
+
+    function prevStep() {
+      currentStep = 1;
+      document.getElementById('formStep2').classList.remove('active');
+      document.getElementById('formStep1').classList.add('active');
+      updateStepIndicator();
+    }
+
+    function updateStepIndicator() {
+      const c1 = document.getElementById('stepCircle1');
+      const c2 = document.getElementById('stepCircle2');
+      const i1 = document.getElementById('stepItem1');
+      const i2 = document.getElementById('stepItem2');
+      const conn = document.getElementById('stepConnector');
+
+      if (currentStep === 2) {
+        c1.classList.remove('active'); c1.classList.add('complete');
+        i1.classList.remove('active'); i1.classList.add('complete');
+        c2.classList.add('active');
+        i2.classList.add('active');
+        conn.style.width = '100%';
+      } else {
+        c1.classList.add('active'); c1.classList.remove('complete');
+        i1.classList.add('active'); i1.classList.remove('complete');
+        c2.classList.remove('active');
+        i2.classList.remove('active');
+        conn.style.width = '0%';
+      }
+    }
+
+    function validateStep1() {
+      let valid = true;
+      const nome = document.getElementById('nome');
+      const email = document.getElementById('email');
+      const whatsapp = document.getElementById('whatsapp');
+
+      // Nome
+      if (nome.value.trim().length < 3) {
+        showError(nome, 'nomeError'); valid = false;
+      } else { clearError(nome, 'nomeError'); }
+
+      // E-mail
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value.trim())) {
+        showError(email, 'emailError'); valid = false;
+      } else { clearError(email, 'emailError'); }
+
+      // WhatsApp
+      if (whatsapp.value.trim().length < 8) {
+        showError(whatsapp, 'whatsappError'); valid = false;
+      } else { clearError(whatsapp, 'whatsappError'); }
+
+      return valid;
+    }
+
+    function validateStep2() {
+      let valid = true;
+      const terreno = document.getElementById('terreno');
+      const projeto = document.getElementById('projeto');
+      const cidade = document.getElementById('cidade');
+      const renda = document.getElementById('renda');
+
+      if (!terreno.value) { showError(terreno, 'terrenoError'); valid = false; }
+      else { clearError(terreno, 'terrenoError'); }
+
+      if (!projeto.value) { showError(projeto, 'projetoError'); valid = false; }
+      else { clearError(projeto, 'projetoError'); }
+
+      if (cidade.value.trim().length < 2) { showError(cidade, 'cidadeError'); valid = false; }
+      else { clearError(cidade, 'cidadeError'); }
+
+      if (renda.value.trim().length < 2) { showError(renda, 'rendaError'); valid = false; }
+      else { clearError(renda, 'rendaError'); }
+
+      return valid;
+    }
+
+    function showError(input, errId) {
+      input.classList.add('error');
+      document.getElementById(errId).classList.add('show');
+    }
+    function clearError(input, errId) {
+      input.classList.remove('error');
+      document.getElementById(errId).classList.remove('show');
+    }
+
+    function submitForm() {
+      if (!validateStep2()) return;
+
+      // ============================================================
+      // TROCAR: integrar com seu backend, Make.com, ActiveCampaign
+      // ou redirecionar para WhatsApp:
+      //   const nome = document.getElementById('nome').value;
+      //   const wa = document.getElementById('whatsapp').value;
+      //   window.open(`https://wa.me/55SEU_NUMERO?text=Olá, me chamo ${nome}...`);
+      // ============================================================
+
+      document.getElementById('formStep2').classList.remove('active');
+      document.getElementById('formSuccess').classList.add('show');
+      document.getElementById('stepCircle2').classList.add('complete');
+    }
+
+    /* ============================================================
+       CARROSSEL
+    ============================================================ */
+    (function initCarousel() {
+      const track = document.getElementById('carouselTrack');
+      const dotsContainer = document.getElementById('carouselDots');
+      const slides = track.querySelectorAll('.carousel-slide');
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+
+      let slidesPerView = getSlidesPerView();
+      let current = 0;
+      let autoplayTimer;
+
+      function getSlidesPerView() {
+        return window.innerWidth <= 680 ? 1 : 3;
+      }
+
+      const totalPages = Math.ceil(slides.length / slidesPerView);
+
+      // Build dots
+      function buildDots() {
+        dotsContainer.innerHTML = '';
+        const pages = Math.ceil(slides.length / getSlidesPerView());
+        for (let i = 0; i < pages; i++) {
+          const dot = document.createElement('button');
+          dot.className = 'dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('aria-label', `Página ${i + 1}`);
+          dot.addEventListener('click', () => goTo(i));
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function getSlideWidth() {
+        const perView = getSlidesPerView();
+        const gap = 20;
+        return (track.parentElement.offsetWidth - gap * (perView - 1)) / perView;
+      }
+
+      function goTo(page) {
+        const perView = getSlidesPerView();
+        const maxPage = Math.ceil(slides.length / perView) - 1;
+        current = Math.max(0, Math.min(page, maxPage));
+        const slideW = getSlideWidth();
+        const gap = 20;
+        track.style.transform = `translateX(-${current * (slideW + gap) * perView}px)`;
+        document.querySelectorAll('.dot').forEach((d, i) => {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      prevBtn.addEventListener('click', () => { resetAutoplay(); goTo(current - 1); });
+      nextBtn.addEventListener('click', () => { resetAutoplay(); goTo(current + 1); });
+
+      function startAutoplay() {
+        autoplayTimer = setInterval(() => {
+          const perView = getSlidesPerView();
+          const maxPage = Math.ceil(slides.length / perView) - 1;
+          goTo(current < maxPage ? current + 1 : 0);
+        }, 4000);
+      }
+      function resetAutoplay() { clearInterval(autoplayTimer); startAutoplay(); }
+
+      window.addEventListener('resize', () => {
+        buildDots();
+        goTo(0);
+      });
+
+      buildDots();
+      goTo(0);
+      startAutoplay();
+    })();
+
+    /* ============================================================
+       MÁSCARA WHATSAPP
+    ============================================================ */
+    document.getElementById('whatsapp').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      this.value = v;
+    });
+
+  </script>
+</body>
+</html>
